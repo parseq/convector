@@ -1,0 +1,1066 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Programming/Coding Assignment
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Original author:
+% Ted Pavlic (http://www.tedpavlic.com)
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing assignment content.
+%
+% This template uses a Perl script as an example snippet of code, most other
+% languages are also usable. Configure them in the "CODE INCLUSION 
+% CONFIGURATION" section.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+\usepackage[dvipsnames]{xcolor}
+
+
+\usepackage{usecases}
+
+\usepackage{enumitem}
+
+\usepackage{amsthm}
+\newtheorem{mydef}{Definition}
+
+
+
+\newenvironment{benumerate}[1]{
+    \let\oldItem\item
+    \def\item{\addtocounter{enumi}{-2}\oldItem}
+    \begin{enumerate}
+    \setcounter{enumi}{#1}
+    \addtocounter{enumi}{1}
+}{
+    \end{enumerate}
+}
+
+
+
+\usepackage{listings}
+
+
+
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstdefinestyle{DOS}
+{
+numbers=none,
+    backgroundcolor=\color{black},
+    basicstyle=\scriptsize\color{white}\ttfamily
+}
+
+
+
+
+
+
+
+
+
+
+
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{courier} % Required for the courier font
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName} % Top left header
+\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center head
+\rhead{\firstxmark} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+%	CODE INCLUSION CONFIGURATION
+%----------------------------------------------------------------------------------------
+
+\definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
+\lstloadlanguages{Perl} % Load Perl syntax for listings, for a list of other languages supported see: ftp://ftp.tex.ac.uk/tex-archive/macros/latex/contrib/listings/listings.pdf
+\lstset{language=Perl, % Use Perl in this example
+        frame=single, % Single frame around code
+        basicstyle=\small\ttfamily, % Use small true type font
+        keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
+        keywordstyle=[2]\color{Purple}, % Perl function arguments purple
+        keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
+        identifierstyle=, % Nothing special about identifiers                                         
+        commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
+        stringstyle=\color{Purple}, % Strings are purple
+        showstringspaces=false, % Don't put marks in string spaces
+        tabsize=5, % 5 spaces per tab
+        %
+        % Put standard Perl functions not included in the default language here
+        morekeywords={rand},
+        %
+        % Put Perl function parameters here
+        morekeywords=[2]{on, off, interp},
+        %
+        % Put user defined functions here
+        morekeywords=[3]{test},
+       	%
+        morecomment=[l][\color{Blue}]{...}, % Line continuation (...) like blue comment
+        numbers=left, % Line numbers on left
+        firstnumber=1, % Line numbers start with line 1
+        numberstyle=\tiny\color{Blue}, % Line numbers are blue and small
+        stepnumber=5 % Line numbers go in steps of 5
+}
+
+% Creates a new command to include a perl script, the first parameter is the filename of the script (without .pl), the second parameter is the caption
+\newcommand{\perlscript}[2]{
+\begin{itemize}
+\item[]\lstinputlisting[caption=#2,label=#1]{#1.pl}
+\end{itemize}
+}
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT STRUCTURE COMMANDS
+%	Skip this unless you know what you're doing
+%----------------------------------------------------------------------------------------
+
+% Header and footer for when a page split occurs within a problem environment
+\newcommand{\enterProblemHeader}[1]{
+\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+}
+
+% Header and footer for when a page split occurs between problem environments
+\newcommand{\exitProblemHeader}[1]{
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1}{}\nobreak
+}
+
+%\setcounter{secnumdepth}{0} % Removes default section numbers
+\newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
+
+\newcommand{\homeworkProblemName}{}
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
+\stepcounter{homeworkProblemCounter} % Increase counter for number of problems
+\renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the name of the problem
+\section{\homeworkProblemName} % Make a section in the document with the custom problem count
+\enterProblemHeader{\homeworkProblemName} % Header and footer within the environment
+}{
+\exitProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+\newcommand{\problemAnswer}[1]{ % Defines the problem answer command with the content as the only argument
+\noindent\framebox[\columnwidth][c]{\begin{minipage}{0.98\columnwidth}#1\end{minipage}} % Makes the box around the problem answer and puts the content inside
+}
+
+\newcommand{\homeworkSectionName}{}
+\newenvironment{homeworkSection}[1]{ % New environment for sections within homework problems, takes 1 argument - the name of the section
+\renewcommand{\homeworkSectionName}{#1} % Assign \homeworkSectionName to the name of the section from the environment argument
+\subsection{\homeworkSectionName} % Make a subsection with the custom name of the subsection
+\enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]} % Header and footer within the environment
+}{
+\enterProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+%----------------------------------------------------------------------------------------
+%	NAME AND CLASS SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{CONVector\ 1.2 Package} % Assignment title
+\newcommand{\hmwkDueDate}{June\ 18,\ 2015} % Due date
+\newcommand{\hmwkClass}{Reference User Guide} % Course/class
+\newcommand{\hmwkClassTime}{June\ 18,\ 2015} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{Software last modified on} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{} % Your name
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{
+\vspace{2in}
+\textmd{\LARGE{\textbf{\hmwkClass:\ \hmwkTitle}}}\\
+\vspace{0.1in}\Large{Detection of Large-scale Structural Variations in PCR-enriched Target Sequencing Data}\\
+\normalsize\vspace{0.1in}\small{Document last modified\ on\ \hmwkDueDate}\\
+\vspace{0.1in}\small{{\hmwkClassInstructor\ \hmwkClassTime}}
+\vspace{3in}
+\vfill
+\includegraphics[scale=0.5]{logo_color_text_right.png}
+}
+
+\author{\textbf{\hmwkAuthorName}}
+
+\date{} % Insert date here if you want it to appear below your name
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+\clearpage\maketitle
+\thispagestyle{empty}
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+%\setcounter{tocdepth}{1} % Uncomment this line if you don't want subsections listed in the ToC
+
+\newpage
+\tableofcontents
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	PROBLEM 1
+%----------------------------------------------------------------------------------------
+
+% To have just one problem per page, simply put a \clearpage after each problem
+
+\section{Disclaimer of warranties and limitation of liabilities}
+
+\begin{small}
+\begin{verbatim}
+
+Copyright (c) 2014-2015 Parseq Lab
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+The program is distributed under GNU GPL v2 license.
+\end{verbatim}
+\end{small}
+
+\newpage
+
+
+\section{Authors}
+
+This set of tools was created by Bragin Anton (Parseq Lab) and Demidov German$^*$ (Parseq Lab, St Petersburg Academic University).
+
+Corresponding author: \href{mailto:gdemidov@parseq.pro}{\nolinkurl{gdemidov@parseq.pro}}
+
+
+\newpage
+\section{Software Description}
+
+This set of tools called {\it CONVector package} was created to detect CNVs in PCR-enriched target sequencing data and was tested on files produced using Life Technologies Ion{\texttrademark} PGM machine.
+
+The most important prerequisites of {\it CONVector package} are:
+
+\begin{itemize}
+\item It requires {\bf a set of samples sequenced using the same panel of amplicons} as the test set of samples.
+\item This tool {\bf requires at least one dataset with more than 25 samples} as the control group. Ensure that all of samples in the control group were sequenced very accurately under the same conditions.
+\item It is always better to use the {\bf samples that were sequenced in one run of sequencing} as the both Test and Control datasets. {\bf All measures of data's quality} suggested in this package {\bf do not show the true differences} between datasets. Sometimes it is possible to merge two datasets consisted of samples sequenced in two runs of sequencing in case if the size of the Test Dataset is too small, but the results can be worse then results of the analysis of one run of sequencing.
+\item It works under the assumption that {\bf each target region was affected by CNVs with the frequency no more than 1/5} in the dataset.
+\item In case {\bf if the number of genes covered by the panel of amplicons is $n > 2$, then it is allowed no more than $\lfloor \frac{n}{2} \rfloor$ genes contain CNVs} in each sample for the correct work of the algorithm. We can not guarantee an accurate results with panels that covers less then 3 genes and with samples that contain larger number of CNVs.
+\end{itemize}
+
+
+
+\subsection{Intuitive ideas of detection}
+
+We explain the main principles based on the part of real dataset. We have took the data about coverages of 7 amplicons $\{ R_1,\ldots ,R_7 \}$ in 47 samples. 2 of these samples have CNVs in the same 4 amplicons $\{ R_4,\ldots ,R_7 \}$.
+
+\begin{figure}[h]
+\begin{center}
+\begin{minipage}[h]{0.48\linewidth}
+\includegraphics[width=1\linewidth]{xtable-9}
+\caption{The landscape of normalized coverages.} 
+\label{ris:experimoriginal} 
+\end{minipage}
+\hfill 
+\begin{minipage}[h]{0.48\linewidth}
+\includegraphics[width=1\linewidth]{xtable-10}
+\caption{The heatmap of normalized coverages.}
+\label{ris:experimcoded}
+\end{minipage}
+\end{center}
+\end{figure}
+
+After some normalization of data we can see that each amplicon has its own approximate height. If we imagine a Traveller, who tries to explore this landscape, his possible travel journal could be:
+
+\begin{itemize}
+\item {\it Region 1}: the typical height is from 50 to 200 meters.
+
+\item {\it Region 2}: the typical height is from 200 to 250 meters.
+
+\item {\it Region 3}: the typical height is from 250 to 300 meters.
+
+\item {\it Region 4}: the typical height is from 150 to 250 meters. I have found 2 unusually low regions with coordinates $(V_{12}; R_4)$ and $(V_{16}; R_4)$.
+
+\item \ldots and so on.
+
+\end{itemize}
+
+As you have already understood, the Traveller is the algorithm of the detection of CNVs and the unusually low cavities and high peaks located in some regions indicate the deletions and duplications of amplicons, respectively. His travel journal will be called \hyperlink{fileWithCNVs}{the Matrix of CNVs}.
+
+Let us imagine the situation that the Traveller founds a lot of unusually low or high regions with coordinates $(V_1; R_i), i \in \{1,\ldots,7\}$. It confuses Traveller and makes his estimations of height of regions inaccurate. Of course he thinks: "Hey, this does not give me any information. This part of the landscape is unpredictable, but I want my final results to be accurate. I will skip the regions with coordinates $(V_1; R_i)$." We call the sample $V_1$ {\it irregular} and the procedure of detection of Irregular samples will be described in the chapter \hyperlink{removeIrrSamples}{Removing irregular samples}. The same is true for some amplicons (they can be unpredictable), they will be indicated as ``EX'' and ``NE'' in \hyperlink{fileWithCNVs}{the Matrix of CNVs}. 
+
+We also can imagine that the earthquake changed the landscape and made it beyond recognition. The travel journal will contain the different heights, for example,   
+
+\begin{itemize}
+\item {\it Region 1}: the typical height is from -500 to 400 meters.
+
+\item {\it Region 2}: the typical height is from 200 to 1200 meters.
+
+\item \ldots and so on.
+\end{itemize}
+
+Just compare the intervals with the intervals from the first travel journal! Evidently, the Traveller will not recognize true cavities and peaks. We call such kind of landscapes {\it Irregular} and it is better not to work with datasets that produce such a landscape \hyperlink{averageRobustVariance}{(more information)}. The reason of ``earthquakes'' in the target sequencing is usually wrong library preparation and other violations of the experimental protocol.
+
+
+\subsection{The scheme of the pipeline}
+
+At first let us make the following definitions:
+\begin{mydef}
+ {\bf Control Dataset} means the dataset that consists of more than 25 samples sequenced using the same panel of amplicons. All samples from the Control Dataset must be sequenced under the equal conditions. Ideally, Control set should not contain any CNVs, but the presence of small amount of CNVs in the Control set will not reduce the quality of the output greatly.
+\end{mydef}
+
+\begin{mydef}
+ {\bf Test Dataset} means the dataset that consists of some samples sequenced in one run of sequencing machine, using the same panel of amplicons as for the train set.
+\end{mydef}
+
+Then, using these defintions, we can shortly describe the scheme of the pipeline step by step:
+
+\begin{enumerate}
+\item Count coverages. {\it Checkpoint:} an initial .xls file with the Matrix of Coverages.
+
+\item Perform QC control and may be merge two Matrix of Coverages - Test and Control. {\it Checkpoint:} a .xls file with the Matrix of Coverages of samples that are suitable for the analysis.
+
+\item Detect CNVs. {\it Checkpoint:} .xls file with the Matrix of CNVs.
+
+\item Create final report. {\it Checkpoint:} report file, Sample: a region affected with variant.
+
+\end{enumerate}
+
+
+
+This steps are performed with the following scripts from the pipeline:
+
+\begin{enumerate}
+\item Counting coverages using \texttt{chimeric\_solver.py}. Re-alignment of chimeric parts.
+     Output: \texttt{.xls}-file with coverages in folder result.
+\item Quality control using \texttt{qc.py}.
+     Output: \texttt{.xls}-file with coverages after QC in folder result and qc report \texttt{qc\_control\_log.txt}.
+\item Unsupervised algorithm using \texttt{/deletionAnalysis/Main.java}.
+     Output: file with CNVs in separate amplicons with name
+         \texttt{outputYOUR\_RUN\_ID.xls}
+\item Supervised algorithm using \texttt{/deletionAnalysis/Main.java}.
+     Output: file with CNVs in CNV sites  with name
+         \texttt{outputYOUR\_RUN\_ID\_after\_LDA.xls}
+\item Final output of results using \texttt{finalizer.py}.
+      Output: files with CNVs in whole exons named
+      
+      \texttt{result\_before\_LDA\_YOUR\_RUN\_ID.xls}, 
+      \texttt{result\_after\_LDA\_YOUR\_RUN\_ID.xls}
+\end{enumerate}
+
+All these steps will be peformed automatically when you run the \texttt{pipeline.py} script.
+
+\newpage
+
+\section{Input and Output files}
+
+\subsection{Overall Description}
+
+{\Large Input files:}
+\begin{itemize}
+\item the Matrix of Coverages of {\it Control} dataset (can be obtained using \texttt{chimeric\_solver.py} and folder with .bam files from the {\it Control} dataset);
+\item the folder with .bam files from the {\it Test} dataset;
+\item .bed file with coordinates of regions.
+\end{itemize}
+
+Required format of .bed file (no additional tab characters \texttt{\textbackslash t}, one region per line):
+\begin{lstlisting}[style=DOS]
+track name = Any comments \n
+chrN \t start_coord \t end_coord \t region ID \t [gene, exon, etc.] \t comments \n
+. . .
+\end{lstlisting}
+
+\hfill \break
+{\Large Input arguments:}
+\begin{itemize}
+\item id of task, all output files will contain this string in their name, {\it string using only letters (lower and
+upper case), numbers and symbol '\_', flags:} \texttt{-id, --id};
+\item address of the .bed file, {\it absolute or relative path, flags:} \texttt{-b, --bed};
+\item optionally: level of specificity, {\it string that is equal to one of the following: ``hard'',
+ ``normal'', ``soft'',
+  they will be transformed to the 
+  quantiles of Student's 
+  t-distribution with confidence level $\alpha_h = 0.01$, $\alpha_n = 0.02$, $\alpha_s = 0.05$, respectively, flags:} \texttt{-m, --mode};
+\item optionally: if the coverages were not counted before - path to the folder with .bam files, {\it string with
+path, absolute or relative, flags: } \texttt{-d, --dir};
+\item optionally: if there are too many non effective regions - the correlation threshold, {\it real number
+between 0.0 and 1.0 (recommended: 0.5 -- 0.9, depending on uniformity of dataset), flags:} \texttt{-mc, --mincor};
+\item optionally: the level of quality control filtration {\it(0.0 -- 1.0, the bigger value means more strict filtration), flags:} \texttt{-qc, --qc};
+\item optionally: the Control Dataset's matrix of coverages, {\it string with path to .xls file, flags:} \texttt{-cs, --control}.
+\end{itemize}
+
+You can count coverages only once for the set of samples. After counting coverages you may just specify the id of task and not to specify the address of the folder with .bam files.
+
+So the example of the launch using these parameters is
+\begin{lstlisting}[style=DOS, caption={Example of launch with all parameters specified}]
+./pipeline.py -d /Users/admin/Desktop/Run_78 -b 2.bed -id Run_78_fin --mode normal -mc 0.8 -cs Run_77 -qc 0.95
+\end{lstlisting}
+
+\hfill \break
+
+
+
+
+
+{\Large Output files:}
+\begin{itemize}
+\item Files with coverages of each region 
+      \begin{enumerate}
+      \item of each sample: 
+      
+      \texttt{/CONVector/result/Id\_of\_task.xls};
+      \item of samples that passes our QC procedures: 
+      
+      \texttt{/CONVector/result/Id\_of\_task\_qc.xls};
+      \end{enumerate}
+\item The raw files with the results of CNVs detection in each region
+      \begin{enumerate}
+      \item of each sample after the unsupervised algorithm: 
+      
+      \texttt{/CONVector/outputId\_of\_task.xls};
+      \item of samples with potentially affected CNV sites after the supervised algorithm: 
+      
+      \texttt{/CONVector/outputId\_of\_task\_after\_LDA.xls};
+      \end{enumerate}
+\item Short reports about the CNV sites affected by CNVs:
+      \begin{enumerate}
+      \item of each sample after the unsupervised algorithm: 
+      
+      \texttt{/CONVector/result\_before\_LDA\_Id\_of\_task.xls};
+      \item of samples with potentially affected CNV sites after the supervised algorithm: 
+     
+      \texttt{/CONVector/result\_after\_LDA\_Id\_of\_task.xls};
+      \end{enumerate}
+\end{itemize}
+
+
+\subsection{Detailed description of several file formats}
+
+{\Large Matrix of Coverages}
+
+The key object is the Matrix of Coverages of the dataset.
+
+
+\begin{table}[h]
+\centering
+\caption{Matrix of Coverages}
+\label{matrixOfCoverages}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Gene                         & Target                        & Sample 1                  & Sample 2                  & Sample 3 \\ \hline
+N/A                          & Region 1                      & 100                       & 200                       & 250      \\ \hline
+Gene 1                       & Region 2                      & 200                       & 300                       & 320      \\ \hline
+\multicolumn{1}{|l|}{Gene 2} & Region 3 & 1000 & 1500 &   2000       \\ \hline
+\end{tabular}
+\end{table}
+
+We keep it inside the tab delimited file with extension .xls.
+
+{\it NOTE:} It is important that the new line symbol is \texttt{\textbackslash n} and the delimiter symbol is \texttt{\textbackslash t}. Please, be accurate with editing of the input files with any spreadsheet applications.
+
+\hfill \break
+
+
+{\Large Matrix of CNVs}
+
+\hypertarget{fileWithCNVs}{The tab delimited file} with the extension .xls that contains information about CNVs is organized as:
+
+\begin{itemize}
+\item At first, there is a block of techincal information about parameters that were used during the analysis: minimum of significance for correlation, quantiles of Student's t-distribution that were used, name of the dataset, etc..
+\item Then below this block there are a table  separated with an empty new line, where 
+\begin{enumerate}
+\item EX means that this region was low covered in the dataset and it is better to EXclude it from the analysis;
+\item NE means that this region shows low correlation with other regions from the dataset and it is better to think that it amplifies Non Effectively and exclude from the analysis;
+\item empty cell means that the tool does not recognize the region as affected by CNV;
+\item DEL means that there probably are a heterozygous or homozygous deletion;
+\item \textasciicircum means that this region was probably duplicated.
+\end{enumerate}
+\begin{table}[h]
+\centering
+\caption{Example of the Matrix of CNVs}
+\label{matrixOfCNVs}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Chr  & Startpos & Stoppos & Amplicon name & Description   & Sample 1 & Sample 2          \\ \hline
+chr1 & 100      & 200     & AMPL1         & Gene 1 Exon 1 & NE       & NE                \\ \hline
+chr2 & 1000     & 1100    & AMPL2         & Gene 2 Exon 1 & EX       & EX                \\ \hline
+chr2 & 2000     & 2150    & AMPL3         & Gene 2 Exon 2 & DEL      &                   \\ \hline
+chr2 & 5000     & 5100    & AMPL4         & Gene 2 Exon 2 &          & \textasciicircum  \\ \hline
+\end{tabular}
+\end{table}
+
+\end{itemize} 
+
+
+
+
+
+
+
+
+\newpage
+
+\section{Installation}
+
+
+The recommended requirements for the scripts from CONVector pipeline:
+\begin{enumerate}
+    \item \texttt{Linux} or \texttt{MacOS};
+    \item \texttt{Python 2.6.x - 2.7.x};
+    \item \texttt{JRE 7} or newer;
+    \item \texttt{samtools} (its better to get the newest version);
+    \item \texttt{nano} or other text editor for examining the results. {\it Optionally, but recommended:} install any kind of spreadsheet application (like Excel, Numbers, OpenOffice, etc.).
+\end{enumerate}
+
+
+Please, be sure that you have all the components listed above and all paths were added to \texttt{PATH} so the applications 2, 3, 4 can be launched from the Terminal.
+
+Then you can simply clone the repository: 
+
+\begin{lstlisting}[style=DOS, caption={Installation of the package}]
+cd your_installation_path
+git clone http://gdemidov@10.5.20.11:7990/stash/scm/nnds/deled.git
+\end{lstlisting}
+    
+ to install the software. All the compilation steps will be performed before each run authomatically. The path \texttt{/CONVector/} from the examples listed below is now equal to:
+ 
+ \texttt{your\_installation\_path/deled/}
+
+
+
+
+\newpage
+\section{Simple launch: pipeline.py}
+\begin{verbatim}
+Source code available in:
+    /CONVector/pipeline.py
+\end{verbatim}
+
+Let us assume that you have a folder \texttt{/home/folder/folder\_with\_bams} with .bam files (more than 25), a file \texttt{/home/bedfile.bed} and do not have any Control Datasets, but you want to test this tool and do not want to read this readme file. OK, the script \texttt{pipeline.py} can do it for you.
+
+\begin{lstlisting}[style=DOS, caption={Simple run of the package}]
+cd /CONVector
+./pipeline.py -d /home/folder/folder_with_bams -b /home/bedfile.bed -id hello_world_run 
+\end{lstlisting}
+
+This script will launch each element of the package step by step. Also you can use flags
+
+\begin{verbatim}
+   -d # folder with .bam files, you may skip this parameter if you already have 
+      # the Matrix of Coverages of the Test Dataset, then you should specify only 
+      # flag -id with the name of the file with the Matrix of Coverages (without .xls).
+   -b # path to corresponding .bed file
+  -cs # path to the Matrix of Coverages of the Control Dataset
+  -mc # minimum corrleation threshold (0.7 by default)
+   -m # mode - hard, normal or soft (normal by default)
+  -qc # quality control level, default = 0.8
+  -id # id of task
+\end{verbatim}
+
+
+Is everything OK? What did you say? No?
+
+
+
+
+
+\newpage
+\section{The preparation of Matrix of Coverages depending on Test Dataset size}
+
+The usage of the pipeline depends on the number of samples included in the {\it Test} and {\it Train} datasets.
+
+
+
+Below we provide you recommendations how to use the package depending on your Test Dataset size.
+
+
+
+
+\subsection{Test dataset size: $\geq 40$ samples}
+
+\begin{usecase}
+\addtitle{Use Case:}{Test dataset size is $\geq 40$ samples}
+\addfield{Quick description}{The size of Test dataset is quite big. The best strategy is to analyse Test dataset separately from Control dataset.
+}
+\additemizedfield{Property:}{
+\item Average Robust Variance of Test dataset with respect to Test dataset: $ARV_{T}$ 
+\item Average Robust Variance of Control dataset with respect to Control dataset: $ARV_{C}$}
+\addfield{Quick hints}{$ARV$ can be calculated using \texttt{qc.py} (\hyperlink{averageRobustVariance}{Quality Control tool}).
+}
+\addscenario{Scenario Name:}{\item $ARV_{T}$ is less or slightly bigger then $ARV_{C}$ $\longrightarrow$ the comparative level of noise of the Test Dataset is quite low. You can perform the analysis.
+
+\item $ARV_{T}$ is significantly bigger then $ARV_{C}$ $\longrightarrow$ the Test Dataset is noisy. The possible problems: 1) there are a lot of \hyperlink{irregular}{irregular samples}; 2) the Test Dataset is \hyperlink{irregular}{irregular}.}
+\addscenario{Solutions of problems:}{\item Run Quality Control tool with \hyperlink{runWithStrictFiltration}{very strict filtration} (percent of smallest outliers should be equal 100\%) several times iteratively using generated files as the input files. Repeat the procedure with respect to the size of the new Test dataset until successful reduce of the $ARV_{T}$.
+\item You should try to find a reason of irregularity in your experimental protocol and then repeat the analysis from the very beginning (library preparation, sequencing, etc.).} 
+\end{usecase}
+
+
+
+
+
+
+
+
+\subsection{Test dataset size: $\geq 25$, but $<40$ samples}
+
+
+\begin{usecase}
+\addtitle{Use Case:}{Test dataset size is $\geq 25$, but $<40$ samples}
+\addfield{Quick description}{The size of Test dataset is not very big, but the goal is to avoid the merging of Test and Control dataset due the fact that it can lead to the lower sensitivity of the CNV detection.
+}
+\additemizedfield{Property:}{
+\item Average Robust Variance of Test dataset with respect to Test dataset: $ARV_{T}$ 
+\item Average Robust Variance of Control dataset with respect to Control dataset: $ARV_{C}$}
+\addfield{Quick hints}{$ARV$ can be calculated using \texttt{qc.py} (\hyperlink{averageRobustVariance}{Quality Control tool}).
+}
+\addscenario{Scenario Name:}{\item $ARV_{T}$ is less then $ARV_{C}$ $\longrightarrow$ the comparative level of noise of the Test Dataset is quite low. You can perform the analysis without merging Test and Control datasets.
+
+\item $ARV_{T} \approx ARV_{C}$ $\longrightarrow$ we recommend to perform both analysis with and without \hyperlink{mergingDatasets}{merging datasets} and to compare results. The possible problems: 1) a lot of samples from Test Dataset do not pass the quality control procedure. 
+
+\item $ARV_{T}$ is significantly bigger then $ARV_{C}$ $\longrightarrow$ the Test Dataset is noisy. The possible problems: 2) there are a lot of irregular samples; 3) the Test Dataset is irregular.}
+\addscenario{Solutions of problems:}{
+\item If a lot of samples from Test Dataset do not pass the quality control procedure with respect to Control Dataset, we would recommend you not to merge datasets.
+\item Run Quality Control tool with \hyperlink{runWithStrictFiltration}{very strict filtration} (percent of smallest outliers should be equal 100\%) several times iteratively using generated files as the input files. Repeat the procedure with respect to the size of the new Test dataset.
+\item You should try to find a reason of irregularity in your experimental protocol and then repeat the analysis from the very beginning (library preparation, sequencing, etc.).} 
+\end{usecase}
+
+
+
+\subsection{Test dataset size: $<25$ samples}
+
+\begin{usecase}
+\addtitle{Use Case:}{Test dataset size is $< 25$ samples}
+\addfield{Quick description}{The size of Test dataset is comparatively small so you should try to merge the Control and Test datasets.
+}
+\addscenario{Scenario Name:}{
+\item A lot of samples from Test dataset passed the qc procedure $\longrightarrow$ \hyperlink{mergingDatasets}{merge two datasets}.
+\item A small number of samples from Test dataset passed the qc procedure $\longrightarrow$ try to find more suitable Control dataset.
+} 
+\end{usecase}
+
+
+
+
+
+
+\newpage
+
+\section{The analysis of prepared Matrix of Coverages}
+
+Once you have prepared the Matrix of Coverages based on the size of Test Dataset and saved it in file \texttt{hello\_world\_run.xls}, you can perform its analysis.
+
+\begin{lstlisting}[style=DOS, caption={Run of the package using prepared Matrix of Coverages}]
+cd /CONVector
+./pipeline.py -b /home/bedfile.bed -id hello_world_run
+\end{lstlisting}
+
+At first, we recommend you to examine the file \texttt{/CONVector/result\_before\_LDA\_Id\_of\_task.xls} and look at the amount of regions that has labels ``NE'' or ``EX'' in respective cells. If there are too many regions with labels ``EX'', then your dataset contains too many low covered regions and you should re design your panel of regions and repeat the experiments. If there are too many regions with labels ``NE'', you should repeat the analysis with the new specified parameter \texttt{-mc} (minimum correlation parameter, default value $= 0.7$), for example:
+
+\begin{lstlisting}[style=DOS, caption={Run of the package using prepared Matrix of Coverages}]
+./pipeline.py -b /home/bedfile.bed -id hello_world_run -mc 0.65
+\end{lstlisting}
+
+Usually, in case if the dataset has low $ARV$, the high amount of ``NE'' indicates that samples' preparation and sequencing were accurate. If you have too many ``NE'' labels again, try to reduce the \texttt{-mc} value again:
+
+\begin{lstlisting}[style=DOS, caption={Decreasing of correlation}]
+./pipeline.py -b /home/bedfile.bed -id hello_world_run -mc 0.6
+./pipeline.py -b /home/bedfile.bed -id hello_world_run -mc 0.55
+\end{lstlisting}
+
+...and so on. In case you do not have any ``NE'' labels, it is better to slightly increase the minimum correlation parameter:
+
+\begin{lstlisting}[style=DOS, caption={Increasing of correlation}]
+./pipeline.py -b /home/bedfile.bed -id hello_world_run -mc 0.75
+./pipeline.py -b /home/bedfile.bed -id hello_world_run -mc 0.8
+\end{lstlisting}
+- until the first NE labels will appear.
+
+
+
+
+
+
+
+\newpage
+
+\section{Usage of Chimeric Solver}
+\begin{verbatim}
+Source code available in:
+    /CONVector/chimeric_solver.py
+    /CONVector/parseq/chimeric_solver/Main.java
+Additional files (will be created automatically):
+    /CONVector/output_with_SAMs/*.sam
+    /CONVector/tmp_chimeras.txt
+    /CONVector/tmp_references.txt
+    /CONVector/tmp_output.txt
+\end{verbatim}
+
+\begin{lstlisting}[style=DOS, caption={Simple run of Chimeric Solver}]
+./chimeric_solver.py -d path_to_folder_with_bam_files -b bed_file.bed -r id_of_task.xls --conv
+\end{lstlisting}
+
+Flag \texttt{--conv} is necessary for the converting the .bam files to .sam files. If you have already converted .bam files to .sam, you may skip this flag.
+
+The arguments are:
+
+\begin{verbatim}
+   --dir, -d          # path to the folder with .bam files
+   --bed, -b          # path to .bed file
+   --mq, -m           # minimum allowed probability of wrong mapping
+                      # of reads, default = 0.9
+   --len, -l          # minimum allowed length threshold, default = 1
+   --cutoff, -c       # minimum significant overlap of read and region, base pairs, 
+                      # default = 20
+   --clipping, -clip  # minimum length of chimeric part of read, base pairs
+                      # default = 30
+   --numOfReads, -n   # minimal number of reads for the sample to be 
+                      # taken in analysis, default = 15.000
+   --resFile, -r      # output file (Matrix of Coverages, extension = .xls)
+
+\end{verbatim}
+
+
+
+
+
+
+
+
+\newpage
+\section{Usage of QC Control}
+
+\begin{verbatim}
+Source code available in:
+    /CONVector/qc.py
+Additional files (will be created automatically):
+    /CONVector/qc_control_log.txt
+    
+\end{verbatim}
+
+
+
+
+
+\subsection{Simple run}
+
+\hypertarget{averageRobustVariance}{Command to run quality control of Matrix with Coverages X.xls (Test Dataset) against Matrix with Coverages Y.xls (Train Dataset): }
+
+\begin{lstlisting}[style=DOS, caption={Simple run of the QC control}]
+cd /CONVector
+./qc.py /home/bedfile.bed ./results/X.xls ./results/Y.xls output_file_name 0.8
+\end{lstlisting}
+
+The last number means the strictness of the filtration: $0.0$ means ``no quality filtration'', $1.0$ means ``very strict filtration''. $0.8$ is a recommended value. Test and Control dataset will be automatically merged if X $\neq$ Y.
+
+The example of \hypertarget{runWithStrictFiltration}{test what samples from the Test Dataset are very similar to the whole Test Dataset (with strict filtration):}
+
+\begin{lstlisting}[style=DOS, caption={QC control to find samples from the Test Dataset that are similar to the Test Dataset}]
+./qc.py /home/bedfile.bed ./results/X.xls ./results/X.xls id_of_task 0.99
+\end{lstlisting}
+
+
+
+
+
+\subsection{Definitions}
+
+\begin{mydef}
+\hypertarget{irregular}{The set of samples X is called irregular} if its coverages shows high level of variance and statistical noise which makes the detection of CNVs in X spurious.  
+\end{mydef}
+
+\begin{mydef}
+ The sample x is called irregular with respect to control set of samples Y if its coverages are different from control set and that makes the CNV detection in x using the coverage structure of Y as the predictor spurious.  
+\end{mydef}
+
+QC control algorithm detects
+
+\begin{enumerate}
+\item irregular sets of samples using {\it average robust variance};
+\item irregular samples using {\it robust regularized Mahalanobis distance} from the sample to control set of samples.
+\end{enumerate}
+
+At first, informally speaking, we transform coverages of all amplicons as: how big is the coverage of a particular amplicon if we compare it to the average coverage of the gene in the sample. Then we calculate two types of distances: average robust variance and the distance of each sample to the control set in terms of variances (variation of Mahalanobis distance).
+
+
+
+
+
+
+
+\newpage
+\subsection{Average robust variance}
+
+\begin{figure}[h!]
+\begin{minipage}[h]{0.4\linewidth}
+\center{\includegraphics[width=1.0\linewidth]{xtable-2} \\ A) Dataset with 8 regions affected with CNVs: $ARV = 0.08336864$}
+\end{minipage}
+\hfill
+\begin{minipage}[h]{0.4\linewidth}
+\center{\includegraphics[width=1.0\linewidth]{xtable-6} \\ B) Dataset with 12 regions affected with CNVs: $ARV = 0.09010809$}
+\end{minipage}
+\caption{Зависимость сигнала от шума для данных.}
+\begin{minipage}[h]{0.4\linewidth}
+\center{\includegraphics[width=1.0\linewidth]{xtable-3} \\ C) Dataset with small amount of normal noise: $ARV = 0.2268741$}
+\end{minipage}
+\hfill
+\begin{minipage}[h]{0.4\linewidth}
+\center{\includegraphics[width=1.0\linewidth]{xtable-5} \\ D) Dataset with large amount of normal noise: $ARV = 1.356552$}
+\end{minipage}
+\caption{The coverages structure datasets with different Average Robust Variance.}
+\label{ris:image1}
+\end{figure}
+
+The Average Robust Variance is calculated as $$ARV = \frac{\sum_{j = 1}^N {\hat{\sigma}^2(\vec{c}(a_j)) }}{N },$$ where $N$ is the number of regions, $\hat{\sigma}^2$ is the robust estimation of variance, $\vec{c}(a_j)$ means the vector of coverages of region $a_j$.
+
+It is a {\it relative} measure. It is informative only if you know the $ARV$ of Control Dataset so you can compare the new $ARV$ with it.
+
+This measure is useless if Test Dataset X is equal to Control Dataset Y because their Average Robust Variances will be equal.
+
+\begin{usecase}
+\addtitle{Use Case:}{Check if the Test Dataset is noisy}
+\addfield{Quick description:}{Measure if the Test Dataset is Irregular comparing to Control Dataset}
+\additemizedfield{Property:}{
+\item Average Robust Variance of Test dataset with respect to Test dataset: $ARV_{T}$ 
+\item Average Robust Variance of Control dataset with respect to Control dataset: $ARV_{C}$}
+\addscenario{Scenario Name:}{\item $ARV_{T} \approx ARV_{C}$: the overall level of noise in Control and Test datasets is approximately the same.
+\item $ARV_{T}$ is significantly bigger then $ARV_{C}$: the level of noise in the Test Dataset is high and you should try to perform the removing of irregular samples outside the Test Dataset.
+\item $ARV_{T} < ARV_{C}$: the level of noise in the Test Dataset is low and may be it is better to use it as the new Control Dataset (after performing the analysis and removing noisy samples and samples with frequent CNVs (only CNV that is more frequent than $0.1$ can spoil the results)).
+} 
+\end{usecase}
+
+The example is simple:
+\begin{lstlisting}[style=DOS, caption={How to get the ARVs}]
+cd /CONVector
+./qc.py /home/bedfile.bed ./results/X.xls ./results/Y.xls id_of_task 0.9
+nano /CONVector/qc_control_report.txt // look at the first two lines, you will find ARVs there
+// if ARVt significantly larger than ARVc then - try to remove irregular samples
+\end{lstlisting}
+
+As you've understood, you can find two numbers, $ARV_C$ and $ARV_T$, in the first lines of the file:
+
+\texttt{/CONVector/qc\_control\_log.txt}.
+
+
+
+
+\subsection{Removing irregular samples}
+
+\hypertarget{removeIrrSamples}{}
+
+
+\begin{usecase}
+\addtitle{Use Case:}{\hypertarget{removeIrrSamples}{Remove irregular samples}}
+\addfield{Quick description:}{Remove all samples that are not similar to the whole dataset}
+\additemizedfield{Property:}{
+\item Percent of smallest values that will be taken into account: $p$, it is recommended to use $p=0.99$ if the Test Dataset has large Average Robust Variance, and $p=0.8$ otherwise.
+}
+\addscenario{Scenario Name:}{\item A lot of samples from Test Dataset (almost all) passed the quality control: you can continue to work with the generated dataset.
+\item A small amount of samples from Test Dataset passed the quality control: you should repeat the procedure of removing irregular samples using the generated file.
+} 
+\end{usecase}
+
+Let us assume that your Control Dataset has $ARV_C = 0.025$, but $ARV_T = 0.045$ which is significantly bigger. So we need to remove irregular samples and to try to make Test Dataset suitable for the analysis. We do not use Control Dataset for this procedure.
+
+\begin{lstlisting}[style=DOS, caption={How to remove irregular samples}]
+cd /CONVector
+./qc.py /home/bedfile.bed ./results/X.xls ./results/X.xls id_of_task 0.9
+./qc.py /home/bedfile.bed ./results/X_qc.xls ./results/X_qc.xls id_of_task 0.9
+nano /qc_control_log.txt
+\end{lstlisting}
+
+Look at the ARV in the file \texttt{/CONVector/qc\_control\_log.txt}. Let us assume that 5 irregular samples were filtered out on the first step (second line of the Listing 11), and 3 samples were filtered on the second step (third line, Listing 11) and the number in the first line of \texttt{/CONVector/qc\_control\_log.txt} $ARV_C = 0.04$. It is not enough. We can repeat the procedure.
+
+\begin{lstlisting}[style=DOS, caption={How to remove irregular samples iteratively}]
+./qc.py /home/bedfile.bed ./results/X_qc_qc.xls ./results/X_qc_qc.xls id_of_task 0.9
+nano /qc_control_log.txt
+\end{lstlisting}
+
+Horay - the number in the first line is $ARV_C = 0.027$, which is approximately $0.025$! The regular dataset can be found in \texttt{/CONVector/results/X\_qc\_qc.xls}.
+
+The list of samples that did not pass the quality control can be found in \texttt{/CONVector/qc\_control\_log.txt}.
+
+
+
+
+
+\subsection{Merging two datasets}
+
+\hypertarget{mergingDatasets}{}
+
+\begin{usecase}
+\addtitle{Use Case:}{Form a Matrix of Coverages from Test and Control datasets}
+\addfield{Quick description:}{Merge the regular samples (with respect to Control Dataset) from Test Dataset with Control Dataset}
+\additemizedfield{Property:}{
+\item Percent of smallest values that will be taken into account: $p$, I would recommend to use value $p \approx 0.9$.
+}
+\addscenario{Scenario Name:}{\item A lot of samples from Test Dataset passed the quality control: you can continue to work with the generated dataset.
+\item Just a small number of samples from Test Dataset passed quality control: it is better to use another Control Dataset and repeat the procedure.
+} 
+\end{usecase}
+
+\begin{lstlisting}[style=DOS, caption={How merge Test Dataset X and Control Dataset Y}]
+cd /CONVector
+./qc.py /home/bedfile.bed ./results/X.xls ./results/Y.xls id_of_task 0.85
+\end{lstlisting}
+
+The resulting Matrix of Coverages can be found in \texttt{/CONVector/result/X\_Y.xls}.
+
+The list of samples that did not pass the quality control can be found in \texttt{/CONVector/qc\_control\_log.txt}.
+
+
+
+
+
+\newpage
+\section{Usage of CONVector}
+\begin{verbatim}
+Source code available in:
+    /CONVector/deletionAnalysis/*.java
+Additional files (will be created automatically):
+    /CONVector/tmpResultsCNV/*
+\end{verbatim}
+
+\begin{lstlisting}[style=DOS, caption={An example of usage}]
+java deletionsAnalysis/Main  -d ./result/MGC_25_apr_15_qc.xls \
+-b /Users/german/Desktop/Parseq/DELETIONS/pipeline/2.bed \
+-f outputMGC_25_apr_15 \
+-mc 0.6 -mnm 5 -nne 4 -nod 4 
+-lb -2.425841 -ub 2.425841 \ 
+-dist 1000000 -lcb 25000 -lca 50 \
+-qc 4 -lss 0.01
+\end{lstlisting}
+
+
+You can vary parameters:
+     
+\begin{verbatim}
+       -f    # name of the output file with the Matrix of CNVs (will have extension .xls)
+       -d    # path to input file with the Matrix of Coverages (.xls)
+       -b    # path to input .bed file
+       -mc   # minimum correlation (default = 0.7)
+       -mnm  # number of models with the highest correlations to take into account 
+             # (default = 5)
+       -nne  # number of models in order to mark an amplicon as 
+             # uneffective (default = 4)
+       -nod  # number of models for detection (default = 4)
+       -lb   # lower bound (depending on confidence level of Student t-distribution 
+             # quantile and degrees of freedom (number of samples in dataset), 
+             # usually 1.7 - 3.5)
+       -ub   # upper bound (depending on confidence level of Student t-distribution 
+             # quantile and degrees of freedom (number of samples in dataset), 
+             # usually 1.7 - 3.5)
+       -dist # minimum distance between different amplicons 
+             # to compare their coveragers (base pairs, default = 1.000.000)
+       -lca  # coverage of amplicons to be excluded from analysis (default = 50)
+       -qc   # upper bound for quantiles for the 2nd stage, can be numbers from 0 to 9
+       -lss  # learning sample sensitivity, can be a real number from 0.0001 to 0.1
+             # approximately equal to the confidence level
+       -lcb  # lower coverage bound, the tool will report about all samples that
+             # will be covered lower than this bound
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Usage of Finalizer}
+\begin{verbatim}
+Source code available in:
+    /CONVector/finalizer.py
+\end{verbatim}
+
+The Finalizer script simply summarizes the \hyperlink{fileWithCNVs}{Files with CNVs}. It is necessary to use it if you have a lot of samples or a lot of regions.
+
+\begin{lstlisting}[style=DOS, caption={Launch of Finalizer}]
+cd /CONVector
+./finalizer.py -i file_with_CNV.xls -o name_of_summary.xls
+\end{lstlisting}
+
+
+\begin{verbatim}
+             -i # input file (Matrix of CNVs, extension - .xls)
+             -o # output file (report, extension - .xls)
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Troubleshooting}
+
+Please, do not try to run this tool on the empty datasets, other documents, etc.. I am really tired of dealing with all the possible cases, so - just be accurate and follow this instruction. I hope that you will not have any problems. If no\ldots
+
+Q: I have tried to run \texttt{pipeline.py}, but got an \texttt{-bash: ./pipeline.py ... : Permission denied} error!
+
+A: Try to execute \texttt{chmod 755 pipeline.py}. The same can help for any other script.
+
+
+
+
+
+\newpage
+\section{Version history}
+
+Version 1.* - {\it Date of release.}
+\begin{benumerate}{2}
+\item {\it (June, 2015)} Added the Average Robust Variance as the measure of irregularity. Added the automatic merging of Test and Control datasets after QC Control (if Test $\neq$ Control).
+\item {\it (May, 2015)} The CNVs were determined not only as outliers, but also as the values that are more likely CNVs. The second algorithm worked with multi-dimensional random variables.
+\item {\it(February, 2015)} The CNVs were determined as the outliers of robust models. The second algorithm worked only with one dimensional random variables.
+\end{benumerate}
+
+
+\newpage
+\section{References}
+
+\end{document}
