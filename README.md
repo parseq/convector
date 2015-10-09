@@ -1,3 +1,3 @@
+## This set of tools called CONVector package was created to detect CNVs in PCR-enriched target sequencing data
 
-
-This repository was created for code review of CONVector 1.2 Package.
+For detailed program description and manual see documents/CONVector 1.2.pdf
