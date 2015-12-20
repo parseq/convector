@@ -3,7 +3,6 @@ package deletionsAnalysis;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Collections;
 
 /**
  * Created by german on 07.08.14.
@@ -53,11 +52,9 @@ public class Amplicon implements Serializable{
         if (Statistics.sm(cov) < thresholdInefficiency) {
             excluded = true;
         } else {
-            ArrayList<Double> tmpList = new ArrayList<Double>();
             for (Integer num : cov) {
                 initialCoverages.add(1.0 * num);
                 if (num >= threshold_homo) {
-                    //double rawValue = (Math.pow(10.0 * num, 1.0 / 50) - 1) * 50;
                     double rawValue = (Math.log(1.0 * num) / Math.log(2));
                     coverages.add(rawValue);
                 } else {
@@ -65,7 +62,7 @@ public class Amplicon implements Serializable{
                 }
             }
         }
-    } //29 4
+    }
 
     public Integer distance(Amplicon otherAmplicon) {
         /*

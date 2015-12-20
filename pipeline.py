@@ -46,7 +46,7 @@ def get_quantiles():
 
     return quant_0995, quant_099, quant_098, quant_095
 
-def get_tmp_del_files(bed_file, quant_dict_del, quant_dict_dup, id_of_run, min_cor):
+def get_tmp_del_files(bed_file, quant_dict_del, quant_dict_dup, id_of_run, min_cor, mode):
     """Launch CONVector using predefined parameters, output - files with CNVs
     (outputId_of_task_before_LDA and outputId_of_task_after_LDA)"""
     num_of_samples = 0
@@ -58,7 +58,9 @@ def get_tmp_del_files(bed_file, quant_dict_del, quant_dict_dup, id_of_run, min_c
     os.system(string_to_cmd)
     string_to_cmd = ("").join(["java  deletionsAnalysis/Main ", " -d ./result/", id_of_run,
                                "_qc.xls", " -b ", bed_file, " -f output", id_of_run, " -mc ", min_cor, " -mnm 5 -nne 4 -nod 4 -lb -",
-                               x, " -ub ", y , " -dist 1000000 -lcb 25000 -lca 50 -qc 2 -lss 0.01"])
+                               x, " -ub ", y , " -dist 1000000 -lcb 25000 -lca 50"])
+    if mode:
+        string_to_cmd += " -c"
     logger.warn(string_to_cmd)
     os.system(string_to_cmd)
 
@@ -97,6 +99,9 @@ def main():
     parser.add_argument('--out','-o', action="store", dest = "output_folder",
                         default = "", required=False,
                         help = 'Folder to output files')
+    parser.add_argument('--cleanControl','-cc', action="store_true", dest = "control_dataset_free_of_CNVs",
+                        default = False, required=False,
+                        help = 'Control dataset is free of CNVs')
     args = parser.parse_args()
     bam_folder = args.directory
     bed_file = args.bed
@@ -105,6 +110,7 @@ def main():
     percent = args.QCpercent
     min_cor = args.minimum_correlation
     output_folder = args.output_folder
+    clean_control = args.control_dataset_free_of_CNVs
 
 
     mode = args.mode
@@ -142,12 +148,18 @@ def main():
     output_file_name = id_of_run
     if not id_of_run == control_dataset:
         output_file_name = id_of_run + "_" + control_dataset
+        if float(percent) < 0.9:
+            percent = "0.9"
+            logger.info("Too low quality control for merging test and control datasets. Value at least 0.9 should be used.")
 
     string_to_cmd = ("").join(["python2 qc.py ", bed_file, " ./result/", id_of_run, ".xls ./result/", control_dataset, ".xls ",  output_file_name, " ", percent])
     os.system(string_to_cmd)
 
-    get_tmp_del_files(bed_file, quant_dict_del, quant_dict_dup, output_file_name, min_cor)
+    get_tmp_del_files(bed_file, quant_dict_del, quant_dict_dup, output_file_name, min_cor, clean_control)
     get_results(output_file_name, output_folder)
+    os.system(string_to_cmd)
+    string_to_cmd = (" ").join(["./visualisation.R", bed_file, "./visualisation", id_of_run])
+    os.system(string_to_cmd)
     logger.info(" ".join(["Task with id", id_of_run, "finished! ;-)"]))
 
 

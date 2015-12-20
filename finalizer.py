@@ -6,7 +6,7 @@ import os
 
 
 
-def parser_results(file_with_results):
+def parser_results(file_with_results, symbols):
     """
     :param file_with_results: file with matrix of CNVs, tab delimited
     :return: tuple, list of names of amplicons, their order, list of samples that contain DEL marks, names of samples,
@@ -39,11 +39,12 @@ def parser_results(file_with_results):
                     order_of_amplicons[tmp_line[0]].append(tmp_line[3])
                     for i in range(5, len(samples) + 5):
                         sample_amplicon_coverage[samples[i - 5]].append(tmp_line[i])
-                        if tmp_line[i] == "DEL" or tmp_line[i] == "HOMO DEL":# or tmp_line[i] == "^":
-                            if tmp_line[4] not in dirty_samples[samples[i - 5]]:
-                                dirty_samples[samples[i - 5]][tmp_line[4]] = [tmp_line[3]]
-                            else:
-                                dirty_samples[samples[i - 5]][tmp_line[4]].append(tmp_line[3])
+                        for symbol in symbols:
+                            if tmp_line[i].startswith(symbol):# or tmp_line[i] == "^":
+                                if tmp_line[4] not in dirty_samples[samples[i - 5]]:
+                                    dirty_samples[samples[i - 5]][tmp_line[4]] = [tmp_line[3]]
+                                else:
+                                    dirty_samples[samples[i - 5]][tmp_line[4]].append(tmp_line[3])
     return amplicons, order_of_amplicons, dirty_samples, samples, exons
                 
 def determine_neighbors(exons):
@@ -67,13 +68,14 @@ def determine_neighbors(exons):
     return neighboors
 
             
-def generate_final_output(file_with_results, file_with_deletions):
+def generate_final_output_del(file_with_results, file_with_deletions):
     """
     :param file_with_results: name of file with result report
     :param file_with_deletions: input matrix with CNVs
     :return:
     """
-    amplicons, order_of_amplicons, dirty_samples, samples, order_of_exons = parser_results(file_with_results)
+    symbols_del = ["DEL", "HOMO DEL"]
+    amplicons, order_of_amplicons, dirty_samples, samples, order_of_exons = parser_results(file_with_results, symbols_del)
     exons_before_length_marking = defaultdict(list)
     exons = defaultdict(list)
     for amplicon, lst in amplicons.iteritems():
@@ -110,6 +112,7 @@ def generate_final_output(file_with_results, file_with_deletions):
                             
     # determine neighboring with less strict criteria
     with open(os.path.join(file_with_deletions), "wb") as f:
+        f.write("Deletions:\n")
         for elem in sorted(final_output.iterkeys()):
             tmp_string = str(elem) + "\t"
             for ex in order_of_exons:
@@ -123,6 +126,63 @@ def generate_final_output(file_with_results, file_with_deletions):
                
 
 
+def generate_final_output_dup(file_with_results, file_with_deletions):
+    """
+    :param file_with_results: name of file with result report
+    :param file_with_deletions: input matrix with CNVs
+    :return:
+    """
+    symbols_del = ["^"]
+    amplicons, order_of_amplicons, dirty_samples, samples, order_of_exons = parser_results(file_with_results, symbols_del)
+    exons_before_length_marking = defaultdict(list)
+    exons = defaultdict(list)
+    for amplicon, lst in amplicons.iteritems():
+        exons[lst[3]].append(amplicon)
+
+
+    neighboors = determine_neighbors(order_of_exons)
+
+    prelim_output = defaultdict(list)
+    final_output = defaultdict(list)
+
+    for suspicious, dirty_exons in dirty_samples.iteritems():
+        for dirty_exon in dirty_exons:
+            exon = exons[dirty_exon]
+            if len(exon) == 1:
+                if len(dirty_exons[dirty_exon]) == len(exon):
+                    prelim_output[suspicious].append(str(dirty_exon))
+            elif len(exon) == 2:
+                if len(dirty_exons[dirty_exon]) == len(exon):
+                    prelim_output[suspicious].append(dirty_exon)
+            else:
+                if len(dirty_exons[dirty_exon]) == (len(exon)):
+                    prelim_output[suspicious].append(dirty_exon)
+    changes = True
+
+    while changes:
+        changes = False
+        for suspicious, dirty_exons in prelim_output.iteritems():
+            for dirty_exon in dirty_exons:
+                    for elem in neighboors[dirty_exon]:
+                        if elem not in final_output[suspicious] and elem in dirty_samples[suspicious]:
+                            if len(dirty_samples[suspicious][elem]) == len(exons[elem]):
+                                final_output[suspicious].append(elem)
+                                changes = True
+
+    # determine neighboring with less strict criteria
+    with open(os.path.join(file_with_deletions), "a") as f:
+        f.write("\nDuplications:\n")
+        for elem in sorted(final_output.iterkeys()):
+            if final_output[elem] != []:
+                tmp_string = str(elem) + "\t"
+                for ex in order_of_exons:
+                    if ex in final_output[elem]:
+                            if len(exons[ex]) == 1:
+                                tmp_string += ex + " : SH\t"
+                            else:
+                                tmp_string += ex + "\t"
+                tmp_string += "\n"
+                f.write(tmp_string)
 
 
 def main():
@@ -141,6 +201,9 @@ def main():
     args = parser.parse_args()
 
     output_folder = args.output_folder
-    generate_final_output(args.input_file, args.output_file)
+    generate_final_output_del(args.input_file, args.output_file)
+    generate_final_output_dup(args.input_file, args.output_file)
+
+
 
 main()

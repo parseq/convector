@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ public class ReaderBED {
     private Map<String, ArrayList<String>> infoAboutAmplicon = new HashMap<String, ArrayList<String>>();
     public String bedFileName = "Unknown BED file";
     private static final Logger log = Logger.getLogger( Solver.class.getName() );
+    public HashSet<String> exones = new HashSet<String>();
 
 
     ReaderBED(String bedFileName) {
@@ -39,6 +41,7 @@ public class ReaderBED {
                             values.add(tmpListForMap[i]);
                         }
                     infoAboutAmplicon.put(tmpListForMap[3], values);
+                    exones.add(tmpListForMap[4]);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -64,4 +67,6 @@ public class ReaderBED {
             infoAboutAmplicon.remove(amplName);
         }
     }
+
+    public int getNumberOfExones() {return exones.size();};
 }

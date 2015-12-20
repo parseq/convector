@@ -13,7 +13,7 @@ public class VersionAndParams {
     public VersionAndParams(Double minCorThreshold, Integer maxNumOfModels, Integer numOfModelForNonEfficiency,
                             Integer minNumOfModelsForOutlierDetection, Double lowerBoundOutlier, Double upperBoundOutlier,
                             Integer minDistanceBetween, Integer thresholdForInefficiency) {
-        String versionAndParams = "version 1.2 ";
+        String versionAndParams = "version 2.0 ";
         versionAndParams = versionAndParams + ", minimum correlation for models: " + minCorThreshold;
         versionAndParams = versionAndParams + ", \nmaximum number of models to test against: " + maxNumOfModels;
         versionAndParams = versionAndParams + ", \nminimum number of models for efficient estimation: " + numOfModelForNonEfficiency;

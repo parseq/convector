@@ -129,13 +129,14 @@ public class LinearModel {
         }
     }
 
-    public void setStudentizedResidualsShift(ArrayList<Double> shiftedY) {
+    public void setStudentizedResidualsShift(ArrayList<Double> shiftedY, double multiplier) {
         /*
         find robustly Studentized residuals for deleterious and duplicated amplicons
          */
         yVals = shiftedY;
         residuals = new ArrayList<Double>();
         findResiduals();
+        this.sigmaEstimated = Statistics.snEstimator(residuals);
 
         double sumXSquared = 0.0;
         double squaredSumX = 0.0;
@@ -148,6 +149,7 @@ public class LinearModel {
         for (int i = 0; i < xVals.size(); i++) {
             denomWikiCalc += Math.pow(xVals.get(i) - mean, 2);
         }
+        sigmaEstimated *= multiplier;
         for (int i = 0; i < xVals.size(); i++) {
             double denominatorWithoutSigma = 1 - 1.0 / xVals.size() - (xVals.get(i) - mean) / denomWikiCalc;
             studentizedResidualsShift.add(residuals.get(i) / (sigmaEstimated * denominatorWithoutSigma));
@@ -166,5 +168,13 @@ public class LinearModel {
         @return studentized residuals with snEstimator of standard deviation
          */
         return studentizedResidualsShift;
+    }
+
+    public ArrayList<Double> getPredictions() {
+        ArrayList<Double> predicted = new ArrayList<Double>();
+        for (Double val: xVals) {
+            predicted.add(val * slope + intercept);
+        }
+        return predicted;
     }
 }

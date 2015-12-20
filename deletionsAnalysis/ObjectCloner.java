@@ -4,8 +4,6 @@ package deletionsAnalysis;
  * Created by german on 06.12.14.
  */
 import java.io.*;
-import java.util.*;
-import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

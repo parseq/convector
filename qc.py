@@ -187,10 +187,10 @@ def output_result_file(true_coverages_of_samples_to_test, true_coverages_of_samp
         top_string = "Gene\tTarget\t"
         for sample in ordered_list_of_samples_test:
             if sample not in qc_negative_list:
-                top_string += sample + "\t"
+                top_string += "Case_" + sample + "\t"
         if mode == 1:
             for sample in ordered_list_of_samples_control:
-                top_string += sample + "\t"
+                top_string += "Control_" + sample + "\t"
         top_string += '\n'
         f.write(top_string)
         for chr, ampls in clean_chromosomes_amplicons.iteritems():

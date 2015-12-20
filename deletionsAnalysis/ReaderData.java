@@ -60,6 +60,7 @@ public class ReaderData {
         }
     }
 
+
     public Map<String, ArrayList<Integer>> getCoverages() {
         return coverages;
     }

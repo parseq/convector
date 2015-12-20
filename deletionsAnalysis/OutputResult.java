@@ -38,10 +38,10 @@ public class OutputResult {
             // Create the empty file with default permissions, etc.
             Files.createFile(file);
         } catch (FileAlreadyExistsException x) {
-           log.log(Level.WARNING, "File named %s" +
-                    " already exists. For accurate analysis, please, name your files differently.\n" +
+            log.log(Level.WARNING, "File named %s" +
+                            " already exists. For accurate analysis, please, name your files differently.\n" +
                             "Now, please, repeat the analysis and choose the name for output file wisely. Now - overwriting.", file
-                    );
+            );
         } catch (IOException x) {
             // Some other sort of failure, such as permissions.
             log.log(Level.SEVERE, "createFile error: %s%n", x);

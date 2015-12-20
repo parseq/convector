@@ -16,12 +16,6 @@ public class OptionsParse {
          */
         Options option = new Options();
 
-        option.addOption(OptionBuilder.withLongOpt("qc")
-                .withDescription("chi squared quantile")
-                .hasArg()
-                .withArgName("qc")
-                .create("qc"));
-
         option.addOption(OptionBuilder.withLongOpt("b")
                 .withDescription("path to BED file")
                 .hasArg()
@@ -94,17 +88,17 @@ public class OptionsParse {
                 .withArgName("f")
                 .create("f"));
 
-        option.addOption(OptionBuilder.withLongOpt("lss")
-                .withDescription("learning sample size")
-                .hasArg()
-                .withArgName("lss")
-                .create("lss"));
-
         option.addOption(OptionBuilder.withLongOpt("h")
                 .withDescription("help message")
                 .hasArg()
                 .withArgName("help")
                 .create());
+
+        option.addOption(OptionBuilder.withLongOpt("c")
+                .withDescription("control sample mode on (skip the first algorithm)")
+                .withArgName("control")
+                .create());
+
 
         return option;
     }

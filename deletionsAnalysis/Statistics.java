@@ -3,6 +3,7 @@ package deletionsAnalysis;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.*;
 
 /**
  * Created by german on 11.07.14.
@@ -148,6 +149,20 @@ public class Statistics {
         return robCor;
     }
 
+    public static Double robustMADCor(ArrayList<Double> first, ArrayList<Double> second) {
+        Double robCor = 0.0;
+        if (!first.isEmpty() && first.size() == second.size()) {
+            ArrayList<Double> sumOfWaved = Statistics.sumOfArrays(Statistics.wavedArray(first), Statistics.wavedArray(second));
+            ArrayList<Double> diffOfWaved = Statistics.diffOfArrays(Statistics.wavedArray(first), Statistics.wavedArray(second));
+
+            Double numerator = Math.pow(Statistics.MAD(sumOfWaved), 2) - Math.pow(Statistics.MAD(diffOfWaved), 2);
+            Double denominator = Math.pow(Statistics.MAD(sumOfWaved), 2) + Math.pow(Statistics.MAD(diffOfWaved), 2);
+
+            robCor = numerator / denominator;
+        }
+        return robCor;
+    }
+
     public static Double cor(ArrayList<Double> first, ArrayList<Double> second) {
         Double cor = 0.0;
 
@@ -168,41 +183,6 @@ public class Statistics {
         return cor;
     }
 
-    public static Double bootStrapCor(ArrayList<Double> fst, ArrayList<Double> snd, Integer iterations) {
-        Double cor = 0.0;
-
-        Double numerator = 0.0;
-        Double denominatorFirstSum = 0.0;
-        Double denominatorSecondSum = 0.0;
-
-        ArrayList<Double> correlations = new ArrayList<Double>();
-        Random rand = new Random();
-
-        for (int j = 0; j < iterations; j++) {
-
-            ArrayList<Double> first = new ArrayList<Double>();
-            ArrayList<Double> second = new ArrayList<Double>();
-
-            for (int k = 0; k < fst.size(); k++) {
-                int randomNum = rand.nextInt((fst.size()));
-                first.add(fst.get(randomNum));
-                second.add(snd.get(randomNum));
-            }
-
-            if (!first.isEmpty() && first.size() == second.size()) {
-                Double firstMean = sm(first);
-                Double secondMean = sm(second);
-                for (int i = 0; i < first.size(); i++) {
-                    numerator += (first.get(i) - firstMean) * (second.get(i) - secondMean);
-                    denominatorFirstSum += Math.pow(first.get(i) - firstMean, 2);
-                    denominatorSecondSum += Math.pow(second.get(i) - secondMean, 2);
-                }
-            }
-            cor = numerator / Math.sqrt(denominatorFirstSum * denominatorSecondSum);
-            correlations.add(cor);
-        }
-        return sm(correlations);
-    }
 
     public static Double iqrVarEstimation(ArrayList<Double> toEstimate) {
         Double varEst = 0.0;
@@ -296,6 +276,7 @@ public class Statistics {
     public static Double snEstimator(ArrayList<Double> toEstimate) {
         Double varEst = 0.0;
         ArrayList<Double> resultList = new ArrayList<Double>();
+
         if (!toEstimate.isEmpty()) {
             for (int i = 0; i < toEstimate.size(); i++) {
                 ArrayList<Double> tmpList = new ArrayList<Double>();
@@ -316,6 +297,59 @@ public class Statistics {
 
         return varEst;
     }
+
+
+
+    public static Double snEstimatorRob(ArrayList<Double> toEstimate, int iterations, Random rand) {
+        Double varEst = 0.0;
+        ArrayList<Double> resultList = new ArrayList<Double>();
+        if (!toEstimate.isEmpty()) {
+            ArrayList<Double> sns = new ArrayList<Double>();
+
+
+            for (int j = 0; j < iterations; j++) {
+
+                ArrayList<Double> first = new ArrayList<Double>();
+
+                for (int k = 0; k < toEstimate.size(); k++) {
+                    int randomNum = rand.nextInt((toEstimate.size()));
+                    first.add(toEstimate.get(randomNum));
+                }
+
+                sns.add(snEstimator(first));
+            }
+            varEst = medW(sns);
+        }
+
+        return varEst;
+    }
+
+    public static Double snEstimatorSim(ArrayList<Double> toEstimate) {
+        Random rand = new Random();
+        int iterations = 10;
+        Double varEst = 0.0;
+        ArrayList<Double> resultList = new ArrayList<Double>();
+        if (!toEstimate.isEmpty()) {
+            ArrayList<Double> sns = new ArrayList<Double>();
+
+
+            for (int j = 0; j < iterations; j++) {
+
+                ArrayList<Double> first = new ArrayList<Double>();
+
+                for (int k = 0; k < toEstimate.size(); k++) {
+                    int randomNum = rand.nextInt((toEstimate.size()));
+                    first.add(toEstimate.get(randomNum));
+                }
+
+                sns.add(snEstimator(first));
+            }
+            varEst = medW(sns);
+        }
+
+        return varEst;
+    }
+
 
     /*public static Double qnEstimator(ArrayList<Double> toEstimate) {
         Double varEst = 0.0;
