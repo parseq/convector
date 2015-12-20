@@ -157,7 +157,6 @@ def main():
 
     get_tmp_del_files(bed_file, quant_dict_del, quant_dict_dup, output_file_name, min_cor, clean_control)
     get_results(output_file_name, output_folder)
-    os.system(string_to_cmd)
     string_to_cmd = (" ").join(["./visualisation.R", bed_file, "./visualisation", id_of_run])
     os.system(string_to_cmd)
     logger.info(" ".join(["Task with id", id_of_run, "finished! ;-)"]))
