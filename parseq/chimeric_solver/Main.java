@@ -35,7 +35,11 @@ final class SmithWaterman implements Callable<Boolean> {
 
             Double maxScore = 0.0;
             Double[][] matrixOfDp = new Double[reference.length() + 1][chimera.length() + 1];
-
+            for (int i = 0; i < reference.length() + 1; i++) {
+                for (int j = 0; j < chimera.length() + 1; j++) {
+                    matrixOfDp[i][j] = 0.0;
+                }
+            }
             for (int i = 1; i < 1 + reference.length(); i++) {
                     for (int j = 1; j < chimera.length() + 1; j++) {
                         Double leftGap = gapCost;
@@ -57,6 +61,7 @@ final class SmithWaterman implements Callable<Boolean> {
                         }
                     }
                 }
+
 
         return false;
     }
@@ -142,7 +147,7 @@ class Solver{
             for (int i = 0; i < chimeras.size(); i++) {
                 ArrayList<Future<Boolean>> futures = new ArrayList<Future<Boolean>>(references.size());
 
-                ExecutorService service = Executors.newFixedThreadPool(4);
+                ExecutorService service = Executors.newFixedThreadPool(16);
                 CompletionService<Boolean> pool = new ExecutorCompletionService<Boolean>(service);
 
                 for (int j = 0; j < references.size(); j++) {
@@ -163,7 +168,7 @@ class Solver{
             }
         }
         catch (Exception e) {
-            System.err.println("Interrupted exception");
+            System.err.println("Interrupted exception\n" + e.getStackTrace());
         }
         writeOutput();
     }
