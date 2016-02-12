@@ -33,8 +33,8 @@ public class LDA implements Serializable{
     private HashMap<String, Amplicon> dataAboutAmplicons; // {amplicon name : object of class Amplicon}
     private ArrayList<String> nonEffectiveAmpls; // list of non effective amplicons
     private static final Logger log = Logger.getLogger( Solver.class.getName() );
-    private int numberOfTests;
-    private double alpha = 0.005;
+    private int numberOfTests = 0;
+    private double alpha = 0.001;
     private ArrayList<Double> pValues = new ArrayList<Double>();
     private HashMap<String, HashMap<String, Double>> distanceToDel = new HashMap<String, HashMap<String, Double>>();
     private HashMap<String, HashMap<String, Double>> distanceToDup = new HashMap<String, HashMap<String, Double>>();
@@ -46,8 +46,8 @@ public class LDA implements Serializable{
     public LDA(Samples samples, HashMap<String, Amplicon> dataAboutAmplicons, ArrayList<String> namesOfSamples,
                ArrayList<String> dirtySamples, ArrayList<String> nonEffectiveAmpls,
                HashMap<String, PriorityQueue<Pair>> amplCorrelationPriorityForLDA, Double minCorThreshold, Integer minDistance,
-               int minNumOfModels, int numberOfTestsPerSample, HashMap<String, HashMap<String, Double>> predictedMedians) {
-        this.numberOfTests = (dirtySamples.size()) * numberOfTestsPerSample;
+               int minNumOfModels, int numberOfTestsPerSample, HashMap<String, HashMap<String, Double>> predictedMedians, Integer numberOfTests) {
+        this.numberOfTests = numberOfTests;
         org.apache.commons.math3.distribution.ChiSquaredDistribution chiSq = new org.apache.commons.math3.distribution.ChiSquaredDistribution(1);
         this.qChisq = chiSq.inverseCumulativeProbability(1 - alpha / numberOfTests);
         this.dirtySamples = dirtySamples;
@@ -102,8 +102,9 @@ public class LDA implements Serializable{
                         Amplicon correlatedAmpl = dataAboutAmplicons.get(e.getAmplName());
                         for (int i = 0; i < namesOfSamples.size(); i++) {
                             //factorsForSampleAndAmpl.set(i, factorsForSampleAndAmpl.get(i) + (correlatedAmpl.getCoverages().get(i)));
-                            toCalculateMean.get(i).add(correlatedAmpl.getCoverages().get(i));
-                            //toCalculateMean.get(i).add(predictedMedians.get(amplName).get(namesOfSamples.get(i)));
+                            //toCalculateMean.get(i).add(correlatedAmpl.getCoverages().get(i));
+                            toCalculateMean.get(i).add(predictedMedians.get(amplName).get(namesOfSamples.get(i)));
+
                         }
                         counter_of_values_to_compare_with++;
                     }
@@ -148,7 +149,7 @@ public class LDA implements Serializable{
     }
 
     public double getDist(double val, String amplName) {
-        return Math.min(Math.pow(val - medians.get(amplName), 2) * diagMatrixOfCovariancesMap.get(amplName) , qChisq);
+        return Math.min(Math.pow(val - medians.get(amplName), 2) * diagMatrixOfCovariancesMap.get(amplName), qChisq);
     }
 
     public double getNormPlot(double val, String amplName) {

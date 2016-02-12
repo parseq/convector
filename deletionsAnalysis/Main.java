@@ -419,7 +419,7 @@ class Solver {
                 }
             }
             for (int i = 0; i < entry1.getValue().getCoverages().size(); i++) {
-                predictedMedians.get(entry1.getKey()).put(samplesNames.get(i), Statistics.med(predictedValues.get(samplesNames.get(i))));
+                predictedMedians.get(entry1.getKey()).put(samplesNames.get(i), Statistics.medW(predictedValues.get(samplesNames.get(i))));
             }
 
 
@@ -485,7 +485,7 @@ class Solver {
                 File myFile = new File(file, myFiles[k]);
                 myFile.delete();
             }
-
+            Integer numberOfTests = numberOfTestsPerSample * (int)dirtySamples.size();
             if (samplesNames.size() <= 20) {
                 log.log(Level.WARNING, "The second stage of the alogrithm can not be succesfull due the small number of samples.");
                 for (int i = 0; i < maximum_cycles_of_algorithm; i++) {
@@ -498,7 +498,7 @@ class Solver {
                     sam = (Samples) (ObjectCloner.deepCopy(samClone));
                     lda = new LDA(sam, dataAboutAmplicons, samplesNames,
                             dirtySamples, nonEffecitveAmpls, amplCorrelationPriorityForLDA, minCorThreshold,
-                            minDistanceBetween, maxNumOfModels, numberOfTestsPerSample, predictedMedians);
+                            minDistanceBetween, maxNumOfModels, numberOfTestsPerSample, predictedMedians, numberOfTests);
                     lda.outRes("./tmpResultsCNV/" + filename + "_step_" + i, versionAndParams, samplesNames, readerBed, cmd.getOptionValue("d"));
                     dirtySamples = lda.getNewDirtySamples();
                     if (lda.numberOfDirtySamplesChanged == false || i == maximum_cycles_of_algorithm) {
@@ -529,7 +529,7 @@ class Solver {
                     sam = (Samples) (ObjectCloner.deepCopy(samClone));
                     lda = new LDA(sam, dataAboutAmplicons, samplesNames,
                             dirtySamples, nonEffecitveAmpls, amplCorrelationPriorityForLDA, minCorThreshold,
-                            minDistanceBetween, maxNumOfModels, numberOfTestsPerSample, predictedMedians);
+                            minDistanceBetween, maxNumOfModels, numberOfTestsPerSample, predictedMedians, numberOfTests);
 
                     dirtySamples = lda.getNewDirtySamples();
 
