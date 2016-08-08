@@ -54,3 +54,10 @@ Archive with Conifer results.
 
 .txt files with CNV calls made by Conifer.
 
+## Additional file 9.xlsx
+
+Results of comparison with other tools
+
+.xlsx table with short summary of methods and performance (where possible) of 12 tools which we have tried to compare with CONVector.
+
+
