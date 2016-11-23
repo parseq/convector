@@ -32,6 +32,7 @@ class Amplicon:
         self.end_pos = int(info[2]) + 1
         self.ID = info[3]
         self.length = self.end_pos - self.start_pos
+        self.gene_symbol = info[4]
 
     def __repr__(self):
         return " ".join(["<<<", self.ID, self.chromosome, "start:",
@@ -39,8 +40,7 @@ class Amplicon:
 
     def __str__(self):
         return " ".join(["<<<", self.ID, self.chromosome, "start:",
-                         str(self.start_pos), "end:", str(self.end_pos), "pool",
-                         str(self.pool), "length", str(self.length), "gene symbol" ,self.gene_symbol, ">>>"])
+                         str(self.start_pos), "end:", str(self.end_pos), "length", str(self.length), "gene symbol" ,self.gene_symbol, ">>>"])
 
     def ampl_intersection(self, other_ampl):
         start_ampl1 = self.start_pos
@@ -319,7 +319,8 @@ def extract_info_of_read(tmp_list, clip_cutoff, canonical_strings_for_each_ampli
                         option = cigar_string[i + 1]
                         if option in ("M", "X", "="):
                             while counter_of_interval < length_of_interval:
-                                canonical_strings_for_each_amplicon[chromosome][ampl][string[counter_of_seq_steps]][position + counter_of_steps] += 1
+                                if not string[counter_of_seq_steps] == "N":
+                                    canonical_strings_for_each_amplicon[chromosome][ampl][string[counter_of_seq_steps]][position + counter_of_steps] += 1
                                 counter_of_steps += 1
                                 counter_of_seq_steps += 1
                                 counter_of_interval += 1
@@ -334,7 +335,7 @@ def extract_info_of_read(tmp_list, clip_cutoff, canonical_strings_for_each_ampli
                                 counter_of_interval += 1
                                 counter_of_seq_steps += 1
                         else:
-                            logger.warn(" ".joind["Unknown option in CIGAR:", option])
+                            logger.warn(" ".join["Unknown option in CIGAR:", option])
     return result_tuple
 
 
@@ -419,8 +420,20 @@ def get_coverage(reads_after_final_processing, cutoff,
                                 coverage_of_amplicons[right_ampl] += 1
                                 total_num_of_chimeras_of_first_type += 1
                 elif len(list_of_potentially_intersected) == 4:
-                    logger.warn(" ".joind("We can not decide the right mapping of read ", str(list_of_potentially_intersected)))
-                    logger.ward(read)
+                    distances = []
+                    for i in xrange(len(list_of_potentially_intersected)):
+                         read_start = read[1]
+                         read_end = read[2]
+                         ampl_start = list_of_potentially_intersected[i].start_pos
+                         ampl_end = list_of_potentially_intersected[i].end_pos
+                         distances.append(abs(read_start - ampl_start) + abs(ampl_end - read_end))
+                    min_dist_amplicon = distances.index(min(distances))
+                    coverage_of_amplicons[list_of_potentially_intersected[min_dist_amplicon]] += 1
+                    total_num_of_chimeras_of_first_type += 1
+                elif len(list_of_potentially_intersected) >= 5:
+                    logger.warn(" ".join(["We can not decide the right mapping of read ", str(list_of_potentially_intersected)]))
+                    logger.warn(read)
+                    total_num_of_chimeras_of_first_type += 1
     logger.info(" ".join(["TOTAL AMOUNT OF I TYPE CHIMERAS:", str(total_num_of_chimeras_of_first_type)]))
     return coverage_of_amplicons
 
@@ -596,7 +609,8 @@ def calculate_corrected_reads(outputdir, panel_of_amplicons, min_length, mq,
 
         with open("tmp_chimeras.txt", "wb") as f:
             for chimera in chimeras_list:
-                f.write(chimera + "\n")
+                if len(chimera) > 40:
+                    f.write(chimera + "\n")
         with open("tmp_references.txt", "wb") as f:
             for chr in canonical_strings_for_each_amplicon_with_primers:
                 for ampl in canonical_strings_for_each_amplicon_with_primers[chr]:
