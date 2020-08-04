@@ -2,4 +2,4 @@
 
 For detailed program description and manual see documents/CONVector 2.0.pdf
 
-All the questions should be directed to german.m.demidov@gmail.com - I am sorry I was not aware that this tool is actually used by some people, but my previous email address does not exist anymore 
+All the questions should be directed to german.m.demidov@gmail.com - I am sorry I was not aware that this tool is actually used by some people, but my previous email address does not exist anymore. Another tool was developed for WES/WGS data (CONVector is still good for small panels) - email me if you want to call CNVs in large genomic data.
